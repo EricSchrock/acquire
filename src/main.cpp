@@ -5,9 +5,12 @@
 #include "SDL.h"
 
 int main() {
+    constexpr float width = 900 * 1.618;
+    constexpr float height = 900;
+
     SDL_Init(SDL_INIT_VIDEO);
 
-    SDL_Window* window = SDL_CreateWindow("Acquire", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 900 * 1.618, 900, SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow("Acquire", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     // Random number generator
@@ -15,9 +18,10 @@ int main() {
     std::mt19937 engine(random());
 
     auto then = std::chrono::system_clock::now();
+    double duration = 10;  // ms
 
-    std::uniform_int_distribution<> duration_dist(250, 500);
-    double duration = duration_dist(engine);
+    bool reversed = true;
+    uint8_t brightness = UINT8_MAX;
 
     bool running = true;
     while (running) {
@@ -36,23 +40,25 @@ int main() {
             SDL_SetRenderDrawColor(renderer, 0x1E, 0x1E, 0x1E, SDL_ALPHA_OPAQUE);
             SDL_RenderClear(renderer);
 
-            std::uniform_int_distribution<> size_dist(5, 500);
-            std::uniform_int_distribution<> x_dist(0, 900 * 1.618);
-            std::uniform_int_distribution<> y_dist(0, 900);
-
             SDL_Rect rectangle;
-            rectangle.w = size_dist(engine);
-            rectangle.h = size_dist(engine);
-            rectangle.x = x_dist(engine);
-            rectangle.y = y_dist(engine);
+            rectangle.w = 100;
+            rectangle.h = 100;
+            rectangle.x = (width / 2) - (rectangle.w / 2);
+            rectangle.y = (height / 2) - (rectangle.h / 2);
 
-            std::uniform_int_distribution<> color_dist(0x00, 0xFF);
-            SDL_SetRenderDrawColor(renderer, color_dist(engine), color_dist(engine), color_dist(engine), color_dist(engine));
+            SDL_SetRenderDrawColor(renderer, brightness, 0x00, 0x00, SDL_ALPHA_OPAQUE);
             SDL_RenderFillRect(renderer, &rectangle);
 
             SDL_RenderPresent(renderer);
 
-            duration = duration_dist(engine);
+            if (brightness == UINT8_MAX)
+                reversed = true;
+
+            if (brightness == (UINT8_MAX / 2))
+                reversed = false;
+
+            (reversed) ? brightness-- : brightness++;
+
             then = now;
         }
     }
