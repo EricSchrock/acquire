@@ -1,6 +1,7 @@
 Language: Cpp
 BasedOnStyle: Google
 
+AccessModifierOffset: -4
 AllowShortFunctionsOnASingleLine: InlineOnly
 ColumnLimit: 0
 IndentWidth: 4
