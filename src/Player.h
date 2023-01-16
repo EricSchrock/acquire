@@ -4,11 +4,14 @@
 
 class Player {
 public:
-    Player(std::string name)
-        : name(name) {}
+    Player(unsigned int id)
+        : id(id) {
+        name = "Player " + std::to_string(id);
+    }
 
     std::string Name() { return name; }
 
 private:
+    unsigned int id;
     std::string name;
 };

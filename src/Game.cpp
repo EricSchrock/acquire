@@ -20,16 +20,16 @@ Game::Game(int num_players)
         }
     }
 
-    for (int i = 0; i < num_players; i++) {
-        players.emplace_back(Player("Player " + std::to_string(i + 1)));
+    for (int id = 1; id <= num_players; id++) {
+        players.emplace_back(Player(id));
 
-        for (int j = 0; j < max_tiles;) {
+        for (int count = 0; count < max_tiles;) {
             int row = row_dist(engine);
             int col = col_dist(engine);
 
             if (tiles[row][col].State() == TileState::InBag) {
-                tiles[row][col].Pick(&(*players.end()));
-                j++;
+                tiles[row][col].Pick(id);
+                count++;
             }
         }
     }
@@ -47,7 +47,7 @@ void Game::Run() {
 
         controller.HandleInput(running);
         Update();
-        renderer.RenderBoard(tiles);
+        renderer.RenderBoard(tiles, current_player_id);
 
         Uint32 frame_end = SDL_GetTicks();
 

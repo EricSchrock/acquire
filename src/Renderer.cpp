@@ -14,7 +14,7 @@ Renderer::~Renderer() {
     SDL_Quit();
 }
 
-void Renderer::RenderBoard(Tile tiles[tiles_up][tiles_across]) {
+void Renderer::RenderBoard(Tile tiles[tiles_up][tiles_across], unsigned int current_player_id) {
     SDL_SetRenderDrawColor(renderer, 0x1E, 0x1E, 0x1E, SDL_ALPHA_OPAQUE);  // Dark grey
     SDL_RenderClear(renderer);
 
@@ -45,7 +45,11 @@ void Renderer::RenderBoard(Tile tiles[tiles_up][tiles_across]) {
                     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFD, 0xD0, SDL_ALPHA_OPAQUE);  // Cream
                     break;
                 case TileState::InHand:
-                    SDL_SetRenderDrawColor(renderer, 0x8E, 0x8E, 0x8E, SDL_ALPHA_OPAQUE);  // Grey
+                    if (tiles[row][col].OwnerID() == current_player_id) {
+                        SDL_SetRenderDrawColor(renderer, 0x8E, 0x8E, 0x8E, SDL_ALPHA_OPAQUE);  // Grey
+                    } else {
+                        SDL_SetRenderDrawColor(renderer, 0xFF, 0xFD, 0xD0, SDL_ALPHA_OPAQUE);  // Cream
+                    }
                     break;
                 case TileState::Placed:
                     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE);  // Black

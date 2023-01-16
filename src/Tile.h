@@ -14,19 +14,19 @@ enum TileState {
 class Tile {
 public:
     TileState State() { return state; }
-    Player* Owner() { return owner; }
+    unsigned int OwnerID() { return owner_id; }
 
-    void Pick(Player* player) {
+    void Pick(unsigned int id) {
         state = InHand;
-        owner = player;
+        owner_id = id;
     }
 
     void Place() {
         state = Placed;
-        owner = nullptr;
+        owner_id = 0;
     }
 
 private:
     TileState state{InBag};
-    Player* owner{nullptr};
+    unsigned int owner_id{0};
 };

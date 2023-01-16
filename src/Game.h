@@ -20,14 +20,15 @@ private:
     static constexpr unsigned int target_frame_duration_ms{1000 / target_fps};
     static constexpr unsigned int target_title_duration_ms{1000};
 
+    static constexpr unsigned int max_tiles{6};
+
     Controller controller;
     Renderer renderer;
 
     Tile tiles[tiles_up][tiles_across];
 
     std::vector<Player> players;
-
-    static constexpr unsigned int max_tiles{6};
+    unsigned int current_player_id{1};
 
     void Update();
 };
