@@ -1,15 +1,7 @@
 #include "Game.h"
 
-#include <random>
-
 Game::Game(int num_players)
-    : num_players(num_players) {
-    std::random_device random;
-    std::mt19937 engine(random());
-
-    std::uniform_int_distribution<> row_dist(0, tiles_up - 1);
-    std::uniform_int_distribution<> col_dist(0, tiles_across - 1);
-
+    : num_players(num_players), engine(device()), row_dist(0, tiles_up - 1), col_dist(0, tiles_across - 1) {
     // Place starting tiles (count = number of players)
     for (int i = 0; i < num_players;) {
         int row = row_dist(engine);
@@ -88,13 +80,6 @@ void Game::Run() {
 
 void Game::Update() {
     if (player_done) {
-        // Update the current player ID
-        current_player_id++;
-
-        if (current_player_id > num_players) {
-            current_player_id = 1;
-        }
-
         // Place currently selected tile
         bool tile_placed = false;
         for (int row = 0; row < tiles_up; row++) {
@@ -110,7 +95,40 @@ void Game::Update() {
                 break;
         }
 
-        // Select tile from current player's hand
+        // Give the current player a new tile
+        bool tile_available = false;
+        for (int row = 0; row < tiles_up; row++) {
+            for (int col = 0; col < tiles_across; col++) {
+                if (tiles[row][col].State() == InBag) {
+                    tile_available = true;
+                    break;
+                }
+            }
+
+            if (tile_available)
+                break;
+        }
+
+        if (tile_available) {
+            for (int count = 0; count < 1;) {
+                int row = row_dist(engine);
+                int col = col_dist(engine);
+
+                if (tiles[row][col].State() == TileState::InBag) {
+                    tiles[row][col].Pick(current_player_id);
+                    count++;
+                }
+            }
+        }
+
+        // Switch to the next player
+        current_player_id++;
+
+        if (current_player_id > num_players) {
+            current_player_id = 1;
+        }
+
+        // Select a tile from current player's hand
         bool tile_selected = false;
         for (int row = 0; row < tiles_up; row++) {
             for (int col = 0; col < tiles_across; col++) {

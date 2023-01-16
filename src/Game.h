@@ -1,5 +1,6 @@
 #pragma once
 
+#include <random>
 #include <vector>
 
 #include "Controller.h"
@@ -21,6 +22,11 @@ private:
     static constexpr unsigned int target_title_duration_ms{1000};
 
     static constexpr unsigned int max_tiles{6};
+
+    std::random_device device;
+    std::mt19937 engine;
+    std::uniform_int_distribution<int> row_dist;
+    std::uniform_int_distribution<int> col_dist;
 
     Controller controller;
     Renderer renderer;
