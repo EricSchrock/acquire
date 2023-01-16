@@ -1,0 +1,7 @@
+stateDiagram-v2
+    [*] --> InBag: Tile()
+    InBag --> Placed: Place()
+    InBag --> InHand: Pick()
+    InHand --> Selected: Select()
+    Selected --> InHand: Deselect()
+    Selected --> Placed: Place()

@@ -1,0 +1,62 @@
+---
+title: "Class relationships and selected members"
+---
+classDiagram
+
+class Game {
+    Game(num_players)
+    Run()
+    Update()
+
+    num_players
+    controller
+    renderer
+    tiles[][]
+    players[]
+}
+
+class Controller {
+    HandleInput(running, player_done, switch_active_tile)
+}
+
+class Renderer {
+    Renderer()
+    ~Renderer()
+    RenderBoard(tiles, current_player_id)
+    RenderFPS(fps)
+}
+
+class Tile {
+    TileState State()
+    unsigned int OwnerID()
+    Pick(id)
+    Select()
+    Deselect()
+    Place()
+
+    state
+    owner_id
+}
+
+class TileState {
+    <<enumeration>>
+    InBag
+    InHand
+    Selected
+    Placed
+}
+
+class Player {
+    Player(id)
+    string Name()
+
+    id
+    name
+}
+
+Game --* Controller : Composition
+Game --* Renderer : Composition
+Game --* Tile : Composition
+Game --* Player : Composition
+
+Tile --* TileState : Composition
