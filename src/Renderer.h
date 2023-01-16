@@ -1,13 +1,16 @@
 #pragma once
 
+#include <string>
+
 #include "SDL.h"
+#include "Tile.h"
 
 class Renderer {
 public:
     Renderer();
     ~Renderer();
 
-    void RenderGame(uint8_t brightness);
+    void RenderBoard(Tile tiles[tiles_up][tiles_across]);
     void RenderFPS(int fps);
 
 private:

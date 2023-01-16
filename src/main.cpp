@@ -1,17 +1,16 @@
 #include <iostream>
-#include <random>
-#include <thread>
 
-#include "Controller.h"
 #include "Game.h"
-#include "Renderer.h"
 
 int main() {
-    Controller controller;
-    Renderer renderer;
-    Game game;
+    int num_players;
 
-    game.Run(controller, renderer);
+    std::cout << "Number of players: ";
+    std::cin >> num_players;
+
+    Game game{num_players};
+
+    game.Run();
 
     return 0;
 }

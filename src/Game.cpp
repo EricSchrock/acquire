@@ -1,6 +1,32 @@
 #include "Game.h"
 
-void Game::Run(Controller& controller, Renderer& renderer) {
+#include <random>
+
+Game::Game(int num_players)
+    : num_players(num_players) {
+    for (auto& row : tiles)
+        for (auto& tile : row)
+            tile.owner = &bank;
+
+    std::random_device random;
+    std::mt19937 engine(random());
+
+    std::uniform_int_distribution<> up_dist(0, tiles_up - 1);
+    std::uniform_int_distribution<> across_dist(0, tiles_across - 1);
+
+    for (int i = 0; i < num_players; i++) {
+        int row = up_dist(engine);
+        int column = across_dist(engine);
+
+        if (tiles[row][column].owner == &board) {
+            i--;  // Account for the same tile being randomly drawn twice
+        } else {
+            tiles[row][column].owner = &board;
+        }
+    }
+}
+
+void Game::Run() {
     Uint32 title_start = SDL_GetTicks();
 
     int frame_count = 0;
@@ -12,7 +38,7 @@ void Game::Run(Controller& controller, Renderer& renderer) {
 
         controller.HandleInput(running);
         Update();
-        renderer.RenderGame(brightness);
+        renderer.RenderBoard(tiles);
 
         Uint32 frame_end = SDL_GetTicks();
 
@@ -26,7 +52,7 @@ void Game::Run(Controller& controller, Renderer& renderer) {
             title_start = frame_end;
         }
 
-        // The frame throttle
+        // The FPS throttle
         Uint32 frame_duration_ms = frame_end - frame_start;
         if (frame_duration_ms < target_frame_duration_ms) {
             SDL_Delay(target_frame_duration_ms - frame_duration_ms);
@@ -35,11 +61,4 @@ void Game::Run(Controller& controller, Renderer& renderer) {
 }
 
 void Game::Update() {
-    if (brightness == UINT8_MAX)
-        reversed = true;
-
-    if (brightness == (UINT8_MAX / 2))
-        reversed = false;
-
-    (reversed) ? brightness-- : brightness++;
 }
