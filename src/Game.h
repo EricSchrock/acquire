@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Controller.h"
-#include "Entity.h"
 #include "Renderer.h"
 #include "Tile.h"
 
@@ -22,9 +21,6 @@ private:
     Renderer renderer;
 
     Tile tiles[tiles_up][tiles_across];
-
-    Entity bank{Color(0xFF, 0xFD, 0xD0)};   // Cream
-    Entity board{Color(0x00, 0x00, 0x00)};  // Black
 
     void Update();
 };

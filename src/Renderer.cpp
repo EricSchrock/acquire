@@ -33,18 +33,22 @@ void Renderer::RenderBoard(Tile tiles[tiles_up][tiles_across]) {
     SDL_SetRenderDrawColor(renderer, 0xEF, 0xED, 0xC0, SDL_ALPHA_OPAQUE);  // Dark cream
     SDL_RenderFillRect(renderer, &board);
 
-    for (int i = 0; i < tiles_up; i++) {
-        for (int j = 0; j < tiles_across; j++) {
+    for (int row = 0; row < tiles_up; row++) {
+        for (int col = 0; col < tiles_across; col++) {
             SDL_Rect tile;
             tile.w = tile.h = tile_width;
-            tile.x = board.x + ((divider_width + tile_width) * j) + divider_width;
-            tile.y = board.y + ((divider_width + tile_width) * i) + divider_width;
+            tile.x = board.x + ((divider_width + tile_width) * col) + divider_width;
+            tile.y = board.y + ((divider_width + tile_width) * row) + divider_width;
 
-            uint8_t r = tiles[i][j].owner->color.r;
-            uint8_t g = tiles[i][j].owner->color.g;
-            uint8_t b = tiles[i][j].owner->color.b;
+            switch (tiles[row][col].State()) {
+                case TileState::Unplayed:
+                    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFD, 0xD0, SDL_ALPHA_OPAQUE);  // Cream
+                    break;
+                case TileState::Played:
+                    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE);  // Black
+                    break;
+            }
 
-            SDL_SetRenderDrawColor(renderer, r, g, b, SDL_ALPHA_OPAQUE);
             SDL_RenderFillRect(renderer, &tile);
         }
     }

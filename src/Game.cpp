@@ -4,24 +4,19 @@
 
 Game::Game(int num_players)
     : num_players(num_players) {
-    for (auto& row : tiles)
-        for (auto& tile : row)
-            tile.owner = &bank;
-
     std::random_device random;
     std::mt19937 engine(random());
 
-    std::uniform_int_distribution<> up_dist(0, tiles_up - 1);
-    std::uniform_int_distribution<> across_dist(0, tiles_across - 1);
+    std::uniform_int_distribution<> row_dist(0, tiles_up - 1);
+    std::uniform_int_distribution<> col_dist(0, tiles_across - 1);
 
-    for (int i = 0; i < num_players; i++) {
-        int row = up_dist(engine);
-        int column = across_dist(engine);
+    for (int i = 0; i < num_players;) {
+        int row = row_dist(engine);
+        int col = col_dist(engine);
 
-        if (tiles[row][column].owner == &board) {
-            i--;  // Account for the same tile being randomly drawn twice
-        } else {
-            tiles[row][column].owner = &board;
+        if (tiles[row][col].State() == TileState::Unplayed) {
+            tiles[row][col].Place();
+            i++;
         }
     }
 }

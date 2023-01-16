@@ -1,11 +1,19 @@
 #pragma once
 
-#include "Entity.h"
+constexpr std::size_t tiles_up{9};
+constexpr std::size_t tiles_across{12};
 
-static constexpr std::size_t tiles_up{9};
-static constexpr std::size_t tiles_across{12};
+enum TileState {
+    Unplayed,
+    Played,
+};
 
 class Tile {
 public:
-    Entity* owner;
+    TileState State() { return state; }
+
+    void Place() { state = Played; }
+
+private:
+    TileState state{Unplayed};
 };
