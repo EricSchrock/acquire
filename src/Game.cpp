@@ -62,7 +62,7 @@ void Game::Run() {
         // The main game loop
         Uint32 frame_start = SDL_GetTicks();
 
-        controller.HandleInput(running, player_done);
+        controller.HandleInput(running, player_done, switch_active_tile);
         Update();
         renderer.RenderBoard(tiles, current_player_id);
 
@@ -95,15 +95,22 @@ void Game::Update() {
             current_player_id = 1;
         }
 
-        // Update the currently selected tile
+        // Place currently selected tile
+        bool tile_placed = false;
         for (int row = 0; row < tiles_up; row++) {
             for (int col = 0; col < tiles_across; col++) {
                 if (tiles[row][col].State() == Selected) {
-                    tiles[row][col].Deselect();
+                    tiles[row][col].Place();
+                    tile_placed = true;
+                    break;
                 }
             }
+
+            if (tile_placed)
+                break;
         }
 
+        // Select tile from current player's hand
         bool tile_selected = false;
         for (int row = 0; row < tiles_up; row++) {
             for (int col = 0; col < tiles_across; col++) {
@@ -119,5 +126,44 @@ void Game::Update() {
         }
 
         player_done = false;
+    }
+
+    if (switch_active_tile) {
+        bool selected_tile_found = false;
+        bool tile_selected = false;
+        for (int row = 0; row < tiles_up; row++) {
+            for (int col = 0; col < tiles_across; col++) {
+                if (selected_tile_found && (tiles[row][col].OwnerID() == current_player_id)) {
+                    tiles[row][col].Select();
+                    tile_selected = true;
+                    break;
+                }
+
+                if (tiles[row][col].State() == Selected) {
+                    tiles[row][col].Deselect();
+                    selected_tile_found = true;
+                }
+            }
+
+            if (tile_selected)
+                break;
+        }
+
+        if (!tile_selected) {
+            for (int row = 0; row < tiles_up; row++) {
+                for (int col = 0; col < tiles_across; col++) {
+                    if (tiles[row][col].OwnerID() == current_player_id) {
+                        tiles[row][col].Select();
+                        tile_selected = true;
+                        break;
+                    }
+                }
+
+                if (tile_selected)
+                    break;
+            }
+        }
+
+        switch_active_tile = false;
     }
 }

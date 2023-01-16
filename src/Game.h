@@ -26,6 +26,7 @@ private:
     Renderer renderer;
 
     Tile tiles[tiles_up][tiles_across];
+    bool switch_active_tile{false};
 
     std::vector<Player> players;
     unsigned int current_player_id{1};
