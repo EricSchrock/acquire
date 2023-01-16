@@ -8,16 +8,22 @@
 int main() {
     Renderer renderer;
 
-    auto then = std::chrono::system_clock::now();
-    double duration = 10;  // ms
+    const std::size_t target_fps = 60;
+    Uint32 target_frame_duration_ms = 1000 / target_fps;
+    Uint32 target_title_duration_ms = 1000;
+
+    Uint32 title_start = SDL_GetTicks();
+
+    int frame_count = 0;
 
     bool reversed = true;
     uint8_t brightness = UINT8_MAX;
 
     bool running = true;
     while (running) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));  // Reduce CPU load
+        Uint32 frame_start = SDL_GetTicks();
 
+        // Input
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             if ((event.type == SDL_WINDOWEVENT) && (event.window.event == SDL_WINDOWEVENT_CLOSE)) {
@@ -25,20 +31,32 @@ int main() {
             }
         }
 
-        auto now = std::chrono::system_clock::now();
-        long elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - then).count();
-        if (elapsed >= duration) {
-            renderer.Render(brightness);
+        // Update
+        if (brightness == UINT8_MAX)
+            reversed = true;
 
-            if (brightness == UINT8_MAX)
-                reversed = true;
+        if (brightness == (UINT8_MAX / 2))
+            reversed = false;
 
-            if (brightness == (UINT8_MAX / 2))
-                reversed = false;
+        (reversed) ? brightness-- : brightness++;
 
-            (reversed) ? brightness-- : brightness++;
+        // Render
+        renderer.RenderBox(brightness);
 
-            then = now;
+        frame_count++;
+
+        Uint32 frame_end = SDL_GetTicks();
+        Uint32 frame_duration_ms = frame_end - frame_start;
+        Uint32 title_duration_ms = frame_end - title_start;
+
+        if (title_duration_ms >= target_title_duration_ms) {
+            renderer.RenderFPS(frame_count);
+            frame_count = 0;
+            title_start = frame_end;
+        }
+
+        if (frame_duration_ms < target_frame_duration_ms) {
+            SDL_Delay(target_frame_duration_ms - frame_duration_ms);
         }
     }
 }

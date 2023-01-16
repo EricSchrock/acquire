@@ -1,5 +1,7 @@
 #include "Renderer.h"
 
+#include <string>
+
 Renderer::Renderer() {
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -12,7 +14,7 @@ Renderer::~Renderer() {
     SDL_Quit();
 }
 
-void Renderer::Render(uint8_t brightness) {
+void Renderer::RenderBox(uint8_t brightness) {
     SDL_SetRenderDrawColor(renderer, 0x1E, 0x1E, 0x1E, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
 
@@ -26,4 +28,9 @@ void Renderer::Render(uint8_t brightness) {
     SDL_RenderFillRect(renderer, &rectangle);
 
     SDL_RenderPresent(renderer);
+}
+
+void Renderer::RenderFPS(int fps) {
+    std::string title{"Acquire (FPS: " + std::to_string(fps) + ")"};
+    SDL_SetWindowTitle(window, title.c_str());
 }

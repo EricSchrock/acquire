@@ -7,7 +7,8 @@ public:
     Renderer();
     ~Renderer();
 
-    void Render(uint8_t brightness);
+    void RenderBox(uint8_t brightness);
+    void RenderFPS(int fps);
 
 private:
     SDL_Window* window;
