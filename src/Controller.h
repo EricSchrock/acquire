@@ -2,7 +2,7 @@
 
 class Controller {
 public:
-    void HandleInput(bool& running);
+    void HandleInput(bool& running, bool& player_done);
 
 private:
 };

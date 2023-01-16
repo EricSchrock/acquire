@@ -45,7 +45,7 @@ void Game::Run() {
         // The main game loop
         Uint32 frame_start = SDL_GetTicks();
 
-        controller.HandleInput(running);
+        controller.HandleInput(running, player_done);
         Update();
         renderer.RenderBoard(tiles, current_player_id);
 
@@ -70,4 +70,13 @@ void Game::Run() {
 }
 
 void Game::Update() {
+    if (player_done) {
+        current_player_id++;
+
+        if (current_player_id > num_players) {
+            current_player_id = 1;
+        }
+
+        player_done = false;
+    }
 }

@@ -29,6 +29,7 @@ private:
 
     std::vector<Player> players;
     unsigned int current_player_id{1};
+    bool player_done{false};
 
     void Update();
 };
