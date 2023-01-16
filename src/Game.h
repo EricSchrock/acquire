@@ -11,4 +11,9 @@ private:
     const unsigned int target_fps{60};
     const unsigned int target_frame_duration_ms{1000 / target_fps};
     const unsigned int target_title_duration_ms{1000};
+
+    bool reversed{true};
+    uint8_t brightness{UINT8_MAX};
+
+    void Update();
 };
