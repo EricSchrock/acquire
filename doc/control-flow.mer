@@ -1,0 +1,60 @@
+flowchart LR
+    subgraph main
+        direction TB
+        Start --> Get
+        Get[Get number of players] --> Run[Game::Run]
+        Run --> End
+    end
+
+    subgraph Game::Run
+        direction TB
+        RunStart[Start] --> Running{Running?}
+        Running -->|Yes| HandleInput[Controller::HandleInput]
+        Running -->|No| RunEnd[End]
+        HandleInput --> Game::Update[Game::Update]
+        Game::Update --> RenderBoard[Renderer::RenderBoard]
+        RenderBoard --> FPS[Update FPS]
+        FPS --> Throttle[Throttle FPS]
+        Throttle --> Running
+    end
+
+    main -.-> Game::Run
+
+    subgraph Controller::HandleInput
+        direction TB
+        InputStart --> Poll{Events?}
+        Poll -->|Yes| Closed{Window closed?}
+        Poll -->|No| InputEnd[End]
+        Closed -->|Yes| RunFlag[Running = False]
+        Closed -->|No| Enter{Enter pressed?}
+        RunFlag --> Enter
+        Enter -->|Yes| DoneFlag[Player done = True]
+        Enter -->|No| Space{Space pressed?}
+        DoneFlag --> Space
+        Space -->|Yes| SwitchFlag[Switch active tile = True]
+        Space -->|No| Poll
+        SwitchFlag --> Poll
+    end
+
+    subgraph Game::Update
+        direction TB
+        UpdateStart[Start] --> Done{Player done?}
+        Done -->|Yes| Place[Place selected tile]
+        Done -->|No| Switch{Switch active tile?}
+        Place --> Draw[Draw tile]
+        Draw --> Next[Switch to next player]
+        Next --> Switch
+        Switch -->|Yes| NextActive[Switch to next tile]
+        Switch -->|No| UpdateEnd[End]
+        NextActive --> UpdateEnd
+    end
+
+    subgraph Renderer::RenderBoard
+        direction TB
+        RenderStart[Start] --> Board[Render board]
+        Board --> RenderTiles[Render tiles]
+        RenderTiles --> RenderEnd[End]
+    end
+
+    Game::Run -.-> Controller::HandleInput
+    Game::Run -.-> Renderer::RenderBoard
