@@ -10,7 +10,7 @@ public:
     Renderer();
     ~Renderer();
 
-    void RenderBoard(Tile tiles[tiles_up][tiles_across], unsigned int current_player_id);
+    void RenderBoard(Tile (&tiles)[tiles_up][tiles_across], unsigned int current_player_id);
     void RenderFPS(int fps);
 
 private:

@@ -14,7 +14,7 @@ Renderer::~Renderer() {
     SDL_Quit();
 }
 
-void Renderer::RenderBoard(Tile tiles[tiles_up][tiles_across], unsigned int current_player_id) {
+void Renderer::RenderBoard(Tile (&tiles)[tiles_up][tiles_across], unsigned int current_player_id) {
     SDL_SetRenderDrawColor(renderer, 0x1E, 0x1E, 0x1E, SDL_ALPHA_OPAQUE);  // Dark grey
     SDL_RenderClear(renderer);
 
