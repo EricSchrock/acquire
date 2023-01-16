@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game(int num_players)
+Game::Game(unsigned int num_players)
     : num_players(num_players), engine(device()), row_dist(0, tiles_up - 1), col_dist(0, tiles_across - 1) {
     // Place starting tiles (count = number of players)
     for (int i = 0; i < num_players;) {

@@ -10,12 +10,12 @@
 
 class Game {
 public:
-    Game(int num_players);
+    Game(unsigned int num_players);
 
     void Run();
 
 private:
-    int num_players;
+    unsigned int num_players;
 
     static constexpr unsigned int target_fps{60};
     static constexpr unsigned int target_frame_duration_ms{1000 / target_fps};
