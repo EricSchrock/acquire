@@ -8,6 +8,7 @@ constexpr std::size_t tiles_across{12};
 enum TileState {
     InBag,
     InHand,
+    Selected,
     Placed,
 };
 
@@ -20,6 +21,9 @@ public:
         state = InHand;
         owner_id = id;
     }
+
+    void Select() { state = Selected; }
+    void Deselect() { state = InHand; }
 
     void Place() {
         state = Placed;

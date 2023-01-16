@@ -51,6 +51,9 @@ void Renderer::RenderBoard(Tile tiles[tiles_up][tiles_across], unsigned int curr
                         SDL_SetRenderDrawColor(renderer, 0xFF, 0xFD, 0xD0, SDL_ALPHA_OPAQUE);  // Cream
                     }
                     break;
+                case TileState::Selected:
+                    SDL_SetRenderDrawColor(renderer, Flash(0x8E), Flash(0x8E), Flash(0x8E), SDL_ALPHA_OPAQUE);  // Grey (flashing)
+                    break;
                 case TileState::Placed:
                     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE);  // Black
                     break;
@@ -61,9 +64,42 @@ void Renderer::RenderBoard(Tile tiles[tiles_up][tiles_across], unsigned int curr
     }
 
     SDL_RenderPresent(renderer);
+
+    UpdateFlash();
 }
 
 void Renderer::RenderFPS(int fps) {
     std::string title{"Acquire (FPS: " + std::to_string(fps) + ")"};
     SDL_SetWindowTitle(window, title.c_str());
+}
+
+void Renderer::UpdateFlash() {
+    if (flash_modifier == (0xFF / 8))
+        flash_reversed = true;
+
+    if (flash_modifier == 0x00)
+        flash_reversed = false;
+
+    if (flash_reversed) {
+        if (flash_modifier < (0x00 + flash_increment)) {
+            flash_modifier = 0x00;
+        } else {
+            flash_modifier -= flash_increment;
+        }
+    } else {
+        if (flash_modifier > ((0xFF / 8) - flash_increment)) {
+            flash_modifier = 0xFF / 8;
+        } else {
+            flash_modifier += flash_increment;
+        }
+    }
+}
+
+Uint8 Renderer::Flash(Uint8 base) {
+    Uint16 sum = base + flash_modifier;
+
+    if (sum > 0xFF)
+        sum = 0xFF;
+
+    return sum;
 }

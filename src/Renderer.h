@@ -19,4 +19,11 @@ private:
 
     const std::size_t screen_width{(std::size_t)(900 * 1.618)};
     const std::size_t screen_height{900};
+
+    static constexpr Uint8 flash_increment{1};
+    Uint8 flash_modifier{0x00};
+    bool flash_reversed{false};
+
+    void UpdateFlash();
+    Uint8 Flash(Uint8 base);
 };

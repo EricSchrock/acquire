@@ -10,6 +10,7 @@ Game::Game(int num_players)
     std::uniform_int_distribution<> row_dist(0, tiles_up - 1);
     std::uniform_int_distribution<> col_dist(0, tiles_across - 1);
 
+    // Place starting tiles (count = number of players)
     for (int i = 0; i < num_players;) {
         int row = row_dist(engine);
         int col = col_dist(engine);
@@ -20,6 +21,7 @@ Game::Game(int num_players)
         }
     }
 
+    // Initialize players and give them tiles
     for (int id = 1; id <= num_players; id++) {
         players.emplace_back(Player(id));
 
@@ -32,6 +34,21 @@ Game::Game(int num_players)
                 count++;
             }
         }
+    }
+
+    // Set the first selected tile
+    bool tile_selected = false;
+    for (int row = 0; row < tiles_up; row++) {
+        for (int col = 0; col < tiles_across; col++) {
+            if (tiles[row][col].OwnerID() == current_player_id) {
+                tiles[row][col].Select();
+                tile_selected = true;
+                break;
+            }
+        }
+
+        if (tile_selected)
+            break;
     }
 }
 
@@ -71,10 +88,34 @@ void Game::Run() {
 
 void Game::Update() {
     if (player_done) {
+        // Update the current player ID
         current_player_id++;
 
         if (current_player_id > num_players) {
             current_player_id = 1;
+        }
+
+        // Update the currently selected tile
+        for (int row = 0; row < tiles_up; row++) {
+            for (int col = 0; col < tiles_across; col++) {
+                if (tiles[row][col].State() == Selected) {
+                    tiles[row][col].Deselect();
+                }
+            }
+        }
+
+        bool tile_selected = false;
+        for (int row = 0; row < tiles_up; row++) {
+            for (int col = 0; col < tiles_across; col++) {
+                if (tiles[row][col].OwnerID() == current_player_id) {
+                    tiles[row][col].Select();
+                    tile_selected = true;
+                    break;
+                }
+            }
+
+            if (tile_selected)
+                break;
         }
 
         player_done = false;
