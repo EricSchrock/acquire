@@ -1,10 +1,11 @@
 #pragma once
 
+#include "Controller.h"
 #include "Renderer.h"
 
 class Game {
 public:
-    void Run(Renderer& renderer);
+    void Run(Controller& controller, Renderer& renderer);
 
 private:
     const unsigned int target_fps{60};

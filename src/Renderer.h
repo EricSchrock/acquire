@@ -7,7 +7,7 @@ public:
     Renderer();
     ~Renderer();
 
-    void RenderBox(uint8_t brightness);
+    void RenderGame(uint8_t brightness);
     void RenderFPS(int fps);
 
 private:

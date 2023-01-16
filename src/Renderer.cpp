@@ -14,7 +14,7 @@ Renderer::~Renderer() {
     SDL_Quit();
 }
 
-void Renderer::RenderBox(uint8_t brightness) {
+void Renderer::RenderGame(uint8_t brightness) {
     SDL_SetRenderDrawColor(renderer, 0x1E, 0x1E, 0x1E, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
 

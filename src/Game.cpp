@@ -1,6 +1,6 @@
 #include "Game.h"
 
-void Game::Run(Renderer& renderer) {
+void Game::Run(Controller& controller, Renderer& renderer) {
     Uint32 title_start = SDL_GetTicks();
 
     int frame_count = 0;
@@ -12,13 +12,7 @@ void Game::Run(Renderer& renderer) {
     while (running) {
         Uint32 frame_start = SDL_GetTicks();
 
-        // Input
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            if ((event.type == SDL_WINDOWEVENT) && (event.window.event == SDL_WINDOWEVENT_CLOSE)) {
-                running = false;
-            }
-        }
+        controller.HandleInput(running);
 
         // Update
         if (brightness == UINT8_MAX)
@@ -30,7 +24,7 @@ void Game::Run(Renderer& renderer) {
         (reversed) ? brightness-- : brightness++;
 
         // Render
-        renderer.RenderBox(brightness);
+        renderer.RenderGame(brightness);
 
         frame_count++;
 
