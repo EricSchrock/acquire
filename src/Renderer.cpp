@@ -15,7 +15,7 @@ Renderer::~Renderer() {
 }
 
 void Renderer::RenderBoard(Tile tiles[tiles_up][tiles_across]) {
-    SDL_SetRenderDrawColor(renderer, 0x1E, 0x1E, 0x1E, SDL_ALPHA_OPAQUE);
+    SDL_SetRenderDrawColor(renderer, 0x1E, 0x1E, 0x1E, SDL_ALPHA_OPAQUE);  // Dark grey
     SDL_RenderClear(renderer);
 
     const int divider_width = 3;
@@ -41,10 +41,13 @@ void Renderer::RenderBoard(Tile tiles[tiles_up][tiles_across]) {
             tile.y = board.y + ((divider_width + tile_width) * row) + divider_width;
 
             switch (tiles[row][col].State()) {
-                case TileState::Unplayed:
+                case TileState::InBag:
                     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFD, 0xD0, SDL_ALPHA_OPAQUE);  // Cream
                     break;
-                case TileState::Played:
+                case TileState::InHand:
+                    SDL_SetRenderDrawColor(renderer, 0x8E, 0x8E, 0x8E, SDL_ALPHA_OPAQUE);  // Grey
+                    break;
+                case TileState::Placed:
                     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE);  // Black
                     break;
             }

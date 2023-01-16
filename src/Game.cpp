@@ -14,9 +14,23 @@ Game::Game(int num_players)
         int row = row_dist(engine);
         int col = col_dist(engine);
 
-        if (tiles[row][col].State() == TileState::Unplayed) {
+        if (tiles[row][col].State() == TileState::InBag) {
             tiles[row][col].Place();
             i++;
+        }
+    }
+
+    for (int i = 0; i < num_players; i++) {
+        players.emplace_back(Player("Player " + std::to_string(i + 1)));
+
+        for (int j = 0; j < max_tiles;) {
+            int row = row_dist(engine);
+            int col = col_dist(engine);
+
+            if (tiles[row][col].State() == TileState::InBag) {
+                tiles[row][col].Pick(&(*players.end()));
+                j++;
+            }
         }
     }
 }
