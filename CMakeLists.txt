@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CXX_FLAGS "-std=c++17 -Wall -Wextra -Werror")
 set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 
-set(SOURCES src/main.cpp src/Renderer.cpp)
+set(SOURCES src/main.cpp src/Game.cpp src/Renderer.cpp)
 
 include_directories(${SDL2_INCLUDE_DIRS} src)
 
