@@ -3,7 +3,7 @@
 #include "Game.h"
 
 int main() {
-    int num_players;
+    unsigned int num_players;
 
     std::cout << "Number of players: ";
     std::cin >> num_players;
